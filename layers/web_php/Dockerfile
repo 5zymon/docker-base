@@ -47,6 +47,8 @@ ENV PATH /usr/local/go/bin:$PATH
 RUN go get github.com/mailhog/mhsendmail
 RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
 
+RUN a2enmod rewrite
+
 RUN groupadd --gid 1000 docker
 RUN useradd -u 1000 docker -g docker
 RUN mkdir /home/docker
