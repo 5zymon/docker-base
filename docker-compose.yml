@@ -1,0 +1,86 @@
+version: '3.4'
+
+services:
+  web_php:
+    build:
+      context: ./layers/web_php
+      dockerfile: Dockerfile
+      args:
+        - WEB_ROOT_PATH=${WEB_ROOT_PATH}
+    container_name: ${COMPOSE_PROJECT_NAME}_web_php
+    volumes:
+      - ./app:${WEB_ROOT_PATH}
+      - ./layers/web_php/apache_conf/vhost.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./layers/web_php/apache_conf/ports.conf:/etc/apache2/ports.conf
+      - ./layers/web_php/ini_files/php.ini:/usr/local/etc/php/php.ini
+      - ./layers/web_php/ini_files/php.ini:/usr/local/etc/php/php.ini
+      - ./layers/web_php/ini_files/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./layers/web_php/ini_files/tzone.ini:/usr/local/etc/php/conf.d/tzone.ini
+    ports:
+      - ${WEB_PORT}:10000
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_DATABASE=${DB_DATABASE}
+      - WEB_PORT=${WEB_PORT}
+      - WEB_ROOT_PATH=${WEB_ROOT_PATH}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+      - MAIL_SERVICE_PORT=${MAILHOG_SMTP_INTERNAL}
+    networks:
+      - backend
+
+  database_mysql:
+    image: mysql:5.7
+    container_name: ${COMPOSE_PROJECT_NAME}_db_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      TZ: ${TZ}
+    expose:
+      - 3306
+    networks:
+      - backend
+
+  database_mariadb:
+    image: mariadb
+    container_name: ${COMPOSE_PROJECT_NAME}_db_mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      TZ: ${TZ}
+    expose:
+      - 3306
+    networks:
+      - backend
+
+  database_manager:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: ${COMPOSE_PROJECT_NAME}_db_manager
+    volumes:
+      - ./layers/database_manager/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+    ports:
+      - ${DB_MANAGER_PORT}:80
+    environment:
+      - DB_HOST=${DB_HOST}
+      - TZ=${TZ}
+    networks:
+      - backend
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: ${COMPOSE_PROJECT_NAME}_mailhog
+    expose:
+      - ${MAILHOG_SMTP_INTERNAL}
+    ports:
+      - ${MAILHOG_UI_EXTERNAL}:${MAILHOG_UI_INTERNAL}
+    networks:
+      - backend
+
+networks:
+  backend:
