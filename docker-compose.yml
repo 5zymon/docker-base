@@ -29,7 +29,9 @@ services:
       - DOMAIN=${DOMAIN}
       - MAIL_SERVICE_PORT=${MAILHOG_SMTP_INTERNAL}
     networks:
-      - backend
+      backend:
+        aliases:
+          - ${DOMAIN}
 
   database_mysql:
     image: mysql:5.7
