@@ -16,6 +16,7 @@ RUN apt-get update && \
     ldap-utils \
     libldb-dev \
     libfreetype6-dev \
+    iputils-ping \
     unzip
 
 RUN pecl install xdebug \ && docker-php-ext-enable xdebug
@@ -38,6 +39,7 @@ RUN docker-php-ext-install \
 RUN curl --silent --show-error https://getcomposer.org/installer | php
 RUN mv /var/www/html/composer.phar /usr/local/bin/composer
 RUN chmod +X /usr/local/bin/composer
+RUN composer global require hirak/prestissimo
 
 RUN apt-get update &&\
     apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
