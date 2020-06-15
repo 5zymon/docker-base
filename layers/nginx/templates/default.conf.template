@@ -1,6 +1,11 @@
-  server { # php/fastcgi
+  server {
     listen       10000;
     root         ${WEB_ROOT_PATH};
+
+    location / {
+        index index.php index.html index.htm;
+        try_files $uri $uri/ =404;
+    }
 
     location ~ \.php$ {
       fastcgi_index index.php;

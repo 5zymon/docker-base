@@ -10,9 +10,9 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_php
     volumes:
       - ./app:${WEB_ROOT_PATH}
-      - ./layers/web_php/ini_files/php.ini:/usr/local/etc/php/php.ini
-      - ./layers/web_php/ini_files/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-      - ./layers/web_php/ini_files/tzone.ini:/usr/local/etc/php/conf.d/tzone.ini
+      - ./layers/php-fpm/ini_files/php.ini:/usr/local/etc/php/php.ini
+      - ./layers/php-fpm/ini_files/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./layers/php-fpm/ini_files/tzone.ini:/usr/local/etc/php/conf.d/tzone.ini
     ports:
       - ${PHP_PORT}
     environment:
