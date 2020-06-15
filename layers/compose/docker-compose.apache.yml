@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  web:
+    build:
+      context: ./layers/apache_php
+      dockerfile: Dockerfile
+      args:
+        - WEB_ROOT_PATH=${WEB_ROOT_PATH}
+    container_name: ${COMPOSE_PROJECT_NAME}_web
+    volumes:
+      - ./app:${WEB_ROOT_PATH}
+      - ./layers/web_php/apache_conf/vhost.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./layers/web_php/apache_conf/ports.conf:/etc/apache2/ports.conf
+    ports:
+      - ${WEB_PORT}:10000
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_DATABASE=${DB_DATABASE}
+      - WEB_PORT=${WEB_PORT}
+      - WEB_ROOT_PATH=${WEB_ROOT_PATH}
+      - TZ=${TZ}
+      - DOMAIN=${DOMAIN}
+      - MAIL_SERVICE_PORT=${MAILHOG_SMTP_INTERNAL}
+    networks:
+      backend:
+        aliases:
+          - ${DOMAIN}

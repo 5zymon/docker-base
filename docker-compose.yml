@@ -1,23 +1,20 @@
 version: '3.4'
 
 services:
-  web_php:
+  php-fpm:
     build:
-      context: ./layers/web_php
+      context: ./layers/php-fpm
       dockerfile: Dockerfile
       args:
         - WEB_ROOT_PATH=${WEB_ROOT_PATH}
-    container_name: ${COMPOSE_PROJECT_NAME}_web_php
+    container_name: ${COMPOSE_PROJECT_NAME}_php
     volumes:
       - ./app:${WEB_ROOT_PATH}
-      - ./layers/web_php/apache_conf/vhost.conf:/etc/apache2/sites-enabled/000-default.conf
-      - ./layers/web_php/apache_conf/ports.conf:/etc/apache2/ports.conf
-      - ./layers/web_php/ini_files/php.ini:/usr/local/etc/php/php.ini
       - ./layers/web_php/ini_files/php.ini:/usr/local/etc/php/php.ini
       - ./layers/web_php/ini_files/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./layers/web_php/ini_files/tzone.ini:/usr/local/etc/php/conf.d/tzone.ini
     ports:
-      - ${WEB_PORT}:10000
+      - ${PHP_PORT}
     environment:
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
@@ -31,35 +28,7 @@ services:
     networks:
       backend:
         aliases:
-          - ${DOMAIN}
-
-  database_mysql:
-    image: mysql:5.7
-    container_name: ${COMPOSE_PROJECT_NAME}_db_mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
-      TZ: ${TZ}
-    expose:
-      - 3306
-    networks:
-      - backend
-
-  database_mariadb:
-    image: mariadb
-    container_name: ${COMPOSE_PROJECT_NAME}_db_mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
-      TZ: ${TZ}
-    expose:
-      - 3306
-    networks:
-      - backend
+          - php
 
   database_manager:
     image: phpmyadmin/phpmyadmin:latest
