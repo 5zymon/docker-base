@@ -22,6 +22,7 @@ services:
       - DB_DATABASE=${DB_DATABASE}
       - WEB_PORT=${WEB_PORT}
       - WEB_ROOT_PATH=${WEB_ROOT_PATH}
+      - WEB_PUBLIC=${WEB_PUBLIC}
       - TZ=${TZ}
       - DOMAIN=${DOMAIN}
       - MAIL_SERVICE_PORT=${MAILHOG_SMTP_INTERNAL}

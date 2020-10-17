@@ -1,6 +1,6 @@
   server {
     listen       10000;
-    root         ${WEB_ROOT_PATH};
+    root         ${WEB_PUBLIC};
 
     location / {
         index index.php index.html index.htm;
