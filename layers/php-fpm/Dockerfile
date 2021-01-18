@@ -20,8 +20,6 @@ RUN apt-get update && \
     iputils-ping \
     unzip
 
-RUN pecl install xdebug \ && docker-php-ext-enable xdebug
-
 RUN docker-php-ext-install \
     sockets \
     mysqli \
@@ -33,13 +31,15 @@ RUN docker-php-ext-install \
     soap \
     xsl \
     zip \
+    exif \
     && docker-php-ext-configure gd \
     && docker-php-ext-install -j$(nproc) gd
 
 RUN curl --silent --show-error https://getcomposer.org/installer | php
+
+RUN curl --silent --show-error https://getcomposer.org/installer | php
 RUN mv /var/www/html/composer.phar /usr/local/bin/composer
 RUN chmod +X /usr/local/bin/composer
-RUN composer global require hirak/prestissimo
 
 RUN apt-get update &&\
     apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\

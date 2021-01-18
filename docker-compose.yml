@@ -11,21 +11,11 @@ services:
     volumes:
       - ./app:${WEB_ROOT_PATH}
       - ./layers/php-fpm/ini_files/php.ini:/usr/local/etc/php/php.ini
-      - ./layers/php-fpm/ini_files/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./layers/php-fpm/ini_files/tzone.ini:/usr/local/etc/php/conf.d/tzone.ini
     ports:
       - ${PHP_PORT}
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_DATABASE=${DB_DATABASE}
-      - WEB_PORT=${WEB_PORT}
-      - WEB_ROOT_PATH=${WEB_ROOT_PATH}
-      - WEB_PUBLIC=${WEB_PUBLIC}
-      - TZ=${TZ}
-      - DOMAIN=${DOMAIN}
-      - MAIL_SERVICE_PORT=${MAILHOG_SMTP_INTERNAL}
+    env_file:
+      - .env
     networks:
       backend:
         aliases:
